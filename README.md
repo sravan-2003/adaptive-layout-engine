@@ -1,3 +1,5 @@
+# Live demo: https://adaptive-layout-engine-xi.vercel.app/
+
 # FrameShift Adaptive Layout Engine
 
 FrameShift is a React and TypeScript editor for adapting editable advertisement layouts across multiple surfaces. The engine preserves semantic creative elements and visual definitions while repositioning and resizing them with constraint-aware archetypes.
