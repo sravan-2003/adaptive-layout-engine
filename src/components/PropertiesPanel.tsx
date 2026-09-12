@@ -1,0 +1,15 @@
+import { Lock, Trash2 } from 'lucide-react'
+import type { AdElement } from '../engine/models'
+interface Props { element?: AdElement; onPosition: (id: string, patch: { x: number; y: number }) => void; onDimensions: (id: string, patch: { width: number; height: number }) => void; onText: (id: string, patch: Record<string, string | number>) => void; onDelete: (id: string) => void }
+const NumberField = ({ label, value, onChange }: { label: string; value: number; onChange: (value: number) => void }) => <label className="field"><span>{label}</span><input type="number" value={Math.round(value)} onChange={(event) => onChange(Number(event.target.value))} /></label>
+export function PropertiesPanel({ element, onPosition, onDimensions, onText, onDelete }: Props) {
+  if (!element) return <aside className="editor-panel properties empty-properties"><div><h3>No selection</h3><p>Select an element on the canvas to inspect and adjust it.</p></div></aside>
+  return <aside className="editor-panel properties"><div className="panel-title"><span>Properties</span><span className="type-pill">{element.type}</span></div><div className="property-head"><h3>{element.type === 'text' ? element.role : element.type}</h3><span>{element.locked && <Lock size={14} />}</span></div>
+    {element.type === 'text' && <><label className="content-field"><span>Content</span><textarea value={element.content} rows={3} onChange={(event) => onText(element.id, { content: event.target.value })} /></label><div className="field-grid"><NumberField label="Font size" value={element.fontSize} onChange={(fontSize) => onText(element.id, { fontSize })} /><NumberField label="Min font" value={element.minFontSize} onChange={(minFontSize) => onText(element.id, { minFontSize })} /></div></>}
+    {element.type === 'cta' && <label className="content-field"><span>Label</span><input value={element.label} onChange={(event) => onText(element.id, { label: event.target.value })} /></label>}
+    {element.type === 'feature' && <label className="content-field"><span>Label</span><textarea value={element.label} rows={2} onChange={(event) => onText(element.id, { label: event.target.value })} /></label>}
+    <section className="property-section"><span className="section-label">POSITION</span><div className="field-grid"><NumberField label="X" value={element.rect.x} onChange={(x) => onPosition(element.id, { x, y: element.rect.y })} /><NumberField label="Y" value={element.rect.y} onChange={(y) => onPosition(element.id, { x: element.rect.x, y })} /></div></section>
+    <section className="property-section"><span className="section-label">DIMENSIONS</span><div className="field-grid"><NumberField label="Width" value={element.rect.width} onChange={(width) => onDimensions(element.id, { width, height: element.rect.height })} /><NumberField label="Height" value={element.rect.height} onChange={(height) => onDimensions(element.id, { width: element.rect.width, height })} /></div></section>
+    <button className="delete-button" onClick={() => onDelete(element.id)}><Trash2 size={15} /> Delete element</button>
+  </aside>
+}
